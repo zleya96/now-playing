@@ -1,20 +1,47 @@
 <template>
   <div>
+
     <h1>Now Playing</h1>
     <table id="datatable" class="table table-hover dt-responsive">
       <thead>
         <tr>
-          <th><h3 class="grow">Title</h3></th>
+          <th>
+            <h3 class="grow">Title</h3>
+          </th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="result in results.results" :key="result.id" >
-          <td><div class="grow">{{ result.title }}</div></td>
+        <tr v-for="result in results.results" :key="result.id" data-bs-toggle="modal" data-bs-target="#movie-modal"
+          @click="setMovie(result.id)">
+          <td>
+            <div class="modal fade" id="movie-modal" tabindex="-1" aria-labelledby="movie-modal-Label"
+              aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="movie-modal-label"> {{ movie.title }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <img class="modal-poster" v-bind:src="'https://image.tmdb.org/t/p/original' + movie.poster_path"
+                      alt="">
+                    <p><b>Overview: </b>{{ movie.overview }}</p>
+                    <p id="movie-release"></p>
+                    <p><b>Runtime: </b>{{ movie.runtime }} minutes</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="grow">{{ result.title }}</div>
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
-  
+
 </template>
  
 <script>
@@ -23,6 +50,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
 import $ from "jquery";
+import 'bootstrap/js/dist/modal'
 
 export default {
   mounted() {
@@ -33,17 +61,35 @@ export default {
         setTimeout(() => {
           $("#datatable").DataTable({
             lengthMenu: [
-              [5,10, 25, 50, -1],
-              [5,10, 25, 50, "All"],
+              [5, 10, 25, 50, -1],
+              [5, 10, 25, 50, "All"],
             ],
             pageLength: 5,
           });
         });
       });
   },
+  methods: {
+    setMovie(id) {
+      fetch("https://api.themoviedb.org/3/movie/" + id + "?api_key=1219113bb7f0eec0cf17bfe1ea256ebb&language=en-US")
+        .then((response) => response.json())
+        .then((data) => {
+          this.movie = data;
+          this.formatDate(data);
+        });
+    },
+    formatDate(data) {
+      let date = new Date(data.release_date);
+      let year = date.getFullYear();
+      let month = date.getUTCMonth() + 1;
+      let day = date.getDate();
+      document.getElementById('movie-release').innerHTML = "<b>Released: </b>" + month + "/" + day + "/" + year;
+    },
+  },
   data: function () {
     return {
       results: [],
+      movie: {},
     };
   },
 };

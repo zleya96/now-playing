@@ -1,6 +1,8 @@
 <template>
-  <div class="container">
-    <DataTable/>
+  <div>
+    <div class="container">
+      <DataTable />
+    </div>
   </div>
 </template>
 
@@ -10,7 +12,7 @@ import DataTable from './components/DataTable'
 export default {
   name: 'App',
   components: {
-    DataTable
+    DataTable,
   }
 }
 </script>
@@ -23,26 +25,45 @@ export default {
   text-align: center;
   color: #000000;
   margin-top: 60px;
-  
+
 }
+
 .container {
-    max-width: 1000px;
-  }
+  max-width: 1000px;
+}
+
 #datatable th {
   text-align: center;
 }
+
 #datatable {
   color: #000000;
 }
-.grow { 
-transition: all .2s ease-in-out; 
+
+.grow {
+  transition: all .2s ease-in-out;
 }
-.grow:hover { 
-transform: scale(1.1); 
+
+.grow:hover {
+  transform: scale(1.1);
 }
+
 body {
-  min-height: 100vh;  
-  background-color: #FFE53B;  
-  background-image: linear-gradient(180deg, #ffe53ba8 0%, #ff404090 100%);  
+  min-height: 100vh;
+  background-image: linear-gradient(180deg, #fdee8bda 0%, #ff4040ae 100%);
 }
+
+.modal-poster {
+  max-width: 50%;
+  height: auto;
+}
+.modal-body p {
+  text-align: left;
+}
+.modal-title {
+  font-weight: bold;
+}
+/* .modal-body {
+  background-image: url("../src/assets/movie-theater.jpg");
+} */
 </style>
