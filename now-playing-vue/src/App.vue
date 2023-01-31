@@ -60,16 +60,16 @@ body {
 
 .modal-body p {
   text-align: left;
-  opacity: 100%;
+}
+
+.modal-body {
+  background-color: hsla(0, 14%, 81%, 0.791);
 }
 
 .modal-title {
   font-weight: bold;
 }
 
-/* .modal-body {
-  background-image: url("../src/assets/movie-theater.jpg");
-} */
 .table-poster {
   max-width: 20%;
   height: auto;
@@ -80,8 +80,11 @@ body {
 }
 
 #modal-background {
-  background-image: url('https://image.tmdb.org/t/p/original');
-  background-size: 225%;
+  background-size: 300%;
   background-position: center;
+}
+
+.modal-content {
+  background-color: hsla(0, 0%, 100%, 0.1);
 }
 </style>

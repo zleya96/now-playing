@@ -2,19 +2,21 @@
   <div>
     <div class="modal fade" id="movie-modal" tabindex="-1" aria-labelledby="movie-modal-Label" aria-hidden="true">
       <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content" id="modal-background">
           <div class="modal-header">
-            <h5 class="modal-title" id="movie-modal-label"> {{ movie.title }}</h5>
+            <h5 class="modal-title" id="movie-modal-label"></h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div id="modal-background" class="modal-body">
+          <div  class="modal-body">
             <img class="modal-poster" v-bind:src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="">
+            <p><b>Title: </b>{{ movie.title }}</p>
+            <p><b v-for="genre in genres" :key="genre.id">{{ genre }}</b></p>
             <p><b>Overview: </b>{{ movie.overview }}</p>
             <p id="movie-release"></p>
             <p><b>Runtime: </b>{{ movie.runtime }} minutes</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
@@ -26,7 +28,8 @@
         <tr>
           <th>&nbsp;</th>
           <th >
-            <h3 class="grow">Title</h3>
+            <h3 @click="toggleABC" class="grow" v-if="abc">A - Z</h3>
+            <h3 @click="toggleABC" class="grow" v-else>Z - A</h3>
           </th>
         </tr>
       </thead>
@@ -54,7 +57,7 @@ import $ from "jquery";
 import 'bootstrap/js/dist/modal'
 
 export default {
-  mounted() {
+  created() {
     fetch("https://api.themoviedb.org/3/movie/now_playing?api_key=1219113bb7f0eec0cf17bfe1ea256ebb&language=en-US&page=1")
       .then((response) => response.json())
       .then((data) => {
@@ -79,6 +82,7 @@ export default {
           this.movie = data;
           this.formatDate(data);
           this.setBackground(data);
+          this.setGenres(data);
         });
     },
     formatDate(data) {
@@ -92,12 +96,30 @@ export default {
       const baseURL = "https://image.tmdb.org/t/p/original";
       let path = data.backdrop_path;
       document.getElementById('modal-background').style.backgroundImage = `url(${baseURL}${path})`
+    },
+    setGenres(data) {
+      let g = data.genres;
+      let result = [];
+      for(let i = 0; i < g.length - 1; i++) {
+        result[i] = g[i].name + ", "
+      }
+      result[g.length - 1]  = g[g.length - 1].name;
+      this.genres = result;
+    },
+    toggleABC() {
+      if(this.abc === true) {
+        this.abc = false;
+      } else {
+        this.abc = true;
+      }
     }
   },
   data: function () {
     return {
       results: [],
       movie: {},
+      genres: [],
+      abc: true,
     };
   },
 };
