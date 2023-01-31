@@ -1,11 +1,31 @@
 <template>
   <div>
+    <div class="modal fade" id="movie-modal" tabindex="-1" aria-labelledby="movie-modal-Label" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="movie-modal-label"> {{ movie.title }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div id="modal-background" class="modal-body">
+            <img class="modal-poster" v-bind:src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="">
+            <p><b>Overview: </b>{{ movie.overview }}</p>
+            <p id="movie-release"></p>
+            <p><b>Runtime: </b>{{ movie.runtime }} minutes</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <h1>Now Playing</h1>
+    <h1 id="main-title">Now Playing</h1>
     <table id="datatable" class="table table-hover dt-responsive">
       <thead>
         <tr>
-          <th>
+          <th>&nbsp;</th>
+          <th >
             <h3 class="grow">Title</h3>
           </th>
         </tr>
@@ -13,28 +33,9 @@
       <tbody>
         <tr v-for="result in results.results" :key="result.id" data-bs-toggle="modal" data-bs-target="#movie-modal"
           @click="setMovie(result.id)">
+          <td><img class="table-poster" v-bind:src="'https://image.tmdb.org/t/p/original' + result.poster_path" alt="">
+          </td>
           <td>
-            <div class="modal fade" id="movie-modal" tabindex="-1" aria-labelledby="movie-modal-Label"
-              aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="movie-modal-label"> {{ movie.title }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <img class="modal-poster" v-bind:src="'https://image.tmdb.org/t/p/original' + movie.poster_path"
-                      alt="">
-                    <p><b>Overview: </b>{{ movie.overview }}</p>
-                    <p id="movie-release"></p>
-                    <p><b>Runtime: </b>{{ movie.runtime }} minutes</p>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  </div>
-                </div>
-              </div>
-            </div>
             <div class="grow">{{ result.title }}</div>
           </td>
         </tr>
@@ -64,6 +65,7 @@ export default {
               [5, 10, 25, 50, -1],
               [5, 10, 25, 50, "All"],
             ],
+            "order": [[1, 'asc']],
             pageLength: 5,
           });
         });
@@ -76,6 +78,7 @@ export default {
         .then((data) => {
           this.movie = data;
           this.formatDate(data);
+          this.setBackground(data);
         });
     },
     formatDate(data) {
@@ -85,6 +88,11 @@ export default {
       let day = date.getDate();
       document.getElementById('movie-release').innerHTML = "<b>Released: </b>" + month + "/" + day + "/" + year;
     },
+    setBackground(data) {
+      const baseURL = "https://image.tmdb.org/t/p/original";
+      let path = data.backdrop_path;
+      document.getElementById('modal-background').style.backgroundImage = `url(${baseURL}${path})`
+    }
   },
   data: function () {
     return {
