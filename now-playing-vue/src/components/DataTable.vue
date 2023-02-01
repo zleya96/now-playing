@@ -7,7 +7,7 @@
             <h5 class="modal-title" id="movie-modal-label"></h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div  class="modal-body">
+          <div class="modal-body">
             <img class="modal-poster" v-bind:src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="">
             <p><b>Title: </b>{{ movie.title }}</p>
             <p><b v-for="genre in genres" :key="genre.id">{{ genre }}</b></p>
@@ -26,8 +26,8 @@
     <table id="datatable" class="table table-hover dt-responsive">
       <thead>
         <tr>
-          <th>&nbsp;</th>
-          <th >
+
+          <th>
             <h3 @click="toggleABC" class="grow" v-if="abc">A - Z</h3>
             <h3 @click="toggleABC" class="grow" v-else>Z - A</h3>
           </th>
@@ -35,11 +35,13 @@
       </thead>
       <tbody>
         <tr v-for="result in results.results" :key="result.id" data-bs-toggle="modal" data-bs-target="#movie-modal"
-          @click="setMovie(result.id)">
-          <td><img class="table-poster" v-bind:src="'https://image.tmdb.org/t/p/original' + result.poster_path" alt="">
-          </td>
+          @click="setMovie(result.id)" >
+
           <td>
-            <div class="grow">{{ result.title }}</div>
+            
+              <img class="table-poster grow" v-bind:src="'https://image.tmdb.org/t/p/original' + result.poster_path" alt="">
+            
+            <div>{{ result.title }}</div>
           </td>
         </tr>
       </tbody>
@@ -57,7 +59,7 @@ import $ from "jquery";
 import 'bootstrap/js/dist/modal'
 
 export default {
-  created() {
+  mounted() {
     fetch("https://api.themoviedb.org/3/movie/now_playing?api_key=1219113bb7f0eec0cf17bfe1ea256ebb&language=en-US&page=1")
       .then((response) => response.json())
       .then((data) => {
@@ -68,11 +70,13 @@ export default {
               [5, 10, 25, 50, -1],
               [5, 10, 25, 50, "All"],
             ],
-            "order": [[1, 'asc']],
+            "order": [[0, 'asc']],
             pageLength: 5,
+            
           });
         });
       });
+
   },
   methods: {
     setMovie(id) {
@@ -100,14 +104,14 @@ export default {
     setGenres(data) {
       let g = data.genres;
       let result = [];
-      for(let i = 0; i < g.length - 1; i++) {
+      for (let i = 0; i < g.length - 1; i++) {
         result[i] = g[i].name + ", "
       }
-      result[g.length - 1]  = g[g.length - 1].name;
+      result[g.length - 1] = g[g.length - 1].name;
       this.genres = result;
     },
     toggleABC() {
-      if(this.abc === true) {
+      if (this.abc === true) {
         this.abc = false;
       } else {
         this.abc = true;
