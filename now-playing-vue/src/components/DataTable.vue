@@ -21,12 +21,10 @@
         </div>
       </div>
     </div>
-
     <h1 id="main-title">Now Playing</h1>
     <table id="datatable" class="table table-hover dt-responsive">
       <thead>
         <tr>
-
           <th>
             <h3 @click="toggleABC" class="grow" v-if="abc">A - Z</h3>
             <h3 @click="toggleABC" class="grow" v-else>Z - A</h3>
@@ -34,14 +32,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="result in results.results" :key="result.id" data-bs-toggle="modal" data-bs-target="#movie-modal"
-          @click="setMovie(result.id)" >
-
-          <td>
-            
-              <img class="table-poster grow" v-bind:src="'https://image.tmdb.org/t/p/original' + result.poster_path" alt="">
-            
-            <div>{{ result.title }}</div>
+        <tr id="table-row" v-for="result in results.results" :key="result.id" @click="setMovie(result.id)">
+          <td class="grow">
+            <img data-bs-toggle="modal" data-bs-target="#movie-modal" class="table-poster"
+              v-bind:src="'https://image.tmdb.org/t/p/original' + result.poster_path" alt="">
+            <div id="tab-title">{{ result.title }}</div>
           </td>
         </tr>
       </tbody>
@@ -72,7 +67,7 @@ export default {
             ],
             "order": [[0, 'asc']],
             pageLength: 5,
-            
+
           });
         });
       });
